@@ -14,11 +14,11 @@ export default function Home() {
   const [error, setError] = useState()
 
 
-  useEffect(() => {
-    if(auth.user){
-      router.push("/")
-    }
-  }, [auth.user])
+  // useEffect(() => {
+  //   if(auth.user){
+  //     router.push("/")
+  //   }
+  // }, [auth.user])
 
 
   const onSubmit = data => {

@@ -1,7 +1,6 @@
 import Link from 'next/link'
 
 import { useAuth } from "../hooks/use-auth.js";
-import logout from '../pages/logout.js';
 import styles from '../styles/components/Navbar.module.scss'
 import { useRouter } from 'next/router'
 
