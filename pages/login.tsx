@@ -1,9 +1,9 @@
 import { useRouter } from 'next/router'
 import { useForm } from "react-hook-form";
 import styles from '../styles/Login.module.scss'
-import firebaseClient from "../service/firebaseClient";
+import {useAuth} from "../hooks/use-auth"
 import { useState } from 'react';
-import { spawn } from 'child_process';
+
 
 
 export default function Home() {
@@ -13,18 +13,18 @@ export default function Home() {
   const { register, handleSubmit, errors } = useForm();
   const [error, setError] = useState()
   const [loading, setLoading] = useState(false)
+  const auth = useAuth()
 
 
   const onSubmit = data => {
     // console.log(data)
     setLoading(true)
-    firebaseClient.auth().signInWithEmailAndPassword(data.email,data.password).then(res=>{
+    auth.signin(data.email,data.password).then(res=>{
       router.replace("/profile")
       setLoading(false)
     }).catch(err=>{
-      // console.log(err);
-      setLoading(false)
       setError(err.message)
+      setLoading(false)
       
     })
   };

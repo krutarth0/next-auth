@@ -3,8 +3,7 @@ import Link from 'next/link'
 import { useAuth } from "../hooks/use-auth";
 import styles from '../styles/components/Navbar.module.scss'
 import { useRouter } from 'next/router'
-import { parseCookies, setCookie, destroyCookie } from 'nookies'
-import firebaseClient from "../service/firebaseClient";
+
 
 export default function Navbar (props) {
     
@@ -12,7 +11,7 @@ export default function Navbar (props) {
     const auth = useAuth();
 
     const logout = ()=>{
-      firebaseClient.auth().signOut()
+      auth.signout()
       router.push("/login")
     }
 
