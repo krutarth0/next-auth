@@ -1,43 +1,34 @@
-import Head from 'next/head'
-import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router'
 import { useForm } from "react-hook-form";
-import { useAuth } from "../hooks/use-auth.js";
 import styles from '../styles/Login.module.scss'
+import firebaseClient from "../service/firebaseClient";
+import { useState } from 'react';
+import { spawn } from 'child_process';
 
 
 export default function Home() {
 
-  const auth = useAuth();
+
   const router = useRouter()
   const { register, handleSubmit, errors } = useForm();
   const [error, setError] = useState()
-
-
-  // useEffect(() => {
-  //   if(auth.user){
-  //     router.push("/")
-  //   }
-  // }, [auth.user])
+  const [loading, setLoading] = useState(false)
 
 
   const onSubmit = data => {
-    console.log(data)
-    auth.signin(data.email,data.password).then(res=>{
-      router.push("/profile")
-      
+    // console.log(data)
+    setLoading(true)
+    firebaseClient.auth().signInWithEmailAndPassword(data.email,data.password).then(res=>{
+      router.replace("/profile")
+      setLoading(false)
     }).catch(err=>{
-      console.log(err);
+      // console.log(err);
+      setLoading(false)
       setError(err.message)
+      
     })
   };
 
-  const handleRegister  = (email,pass) =>{
-    auth.signup(email,pass).then(res=>{
-      console.log("user is created");
-      router.push("/")
-    })
-  }
 
   return (
     <div className={styles.centerContainer}>
@@ -61,8 +52,8 @@ export default function Home() {
           </div>
 
           <div className="errors">
-            {error?<span>{error}</span>:""} 
-            
+            {error && <span>{error}</span>} 
+            {loading && <span>Loading..</span> }
           </div>
           <br/>
           <div className={styles.buttons}>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext, createContext } from "react";
 import firebase from "firebase/app";
 import "firebase/auth";
-
+import { useRouter } from 'next/router'
 
 // Add your Firebase credentials
 const config = {
@@ -15,6 +15,7 @@ const config = {
 if (!firebase.apps.length) {
   firebase.initializeApp(config);
 }
+
 
 const authContext = createContext();
 
@@ -34,7 +35,8 @@ export const useAuth = () => {
 // Provider hook that creates auth object and handles state
 function useProvideAuth() {
   const [user, setUser] = useState(null);
-  
+  const [loading, setLoading] = useState(true)
+  const router = useRouter()
   // Wrap any Firebase methods we want to use making sure ...
   // ... to save the user to state.
   const signin = (email, password) => {
@@ -89,11 +91,14 @@ function useProvideAuth() {
   // ... component that utilizes this hook to re-render with the ...
   // ... latest auth object.
   useEffect(() => {
+    setLoading(true)
     const unsubscribe = firebase.auth().onAuthStateChanged(user => {
       if (user) {
         setUser(user);
+        setLoading(false)
       } else {
         setUser(false);
+        setLoading(false)
       }
     });
 
@@ -104,6 +109,7 @@ function useProvideAuth() {
   // Return the user object and auth methods
   return {
     user,
+    loading,
     signin,
     signup,
     signout,
